@@ -1,14 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Rádio Rosas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rádio Rosas da Boa Vista - Ao Vivo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(160deg, #1c0a0a, #3b0d0d);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .radio-card {
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(251,191,36,.25);
+    border-radius: 20px;
+    padding: 24px;
+    color: #fef3c7;
+    display: flex; flex-direction: column; gap: 18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+    max-width: 480px; width: 100%;
+  }
+  .radio-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .radio-logo-area { display: flex; align-items: center; gap: 12px; }
+  .radio-logo-img {
+    width: 64px; height: 64px; border-radius: 14px; object-fit: cover;
+    border: 2px solid #fbbf24;
+    box-shadow: 0 4px 16px rgba(251,191,36,.35);
+    background: #fff;
+  }
+  .radio-name { font-weight: 800; font-size: 20px; line-height: 1.15; color: #fde68a; }
+  .radio-sub { font-size: 12px; color: #fca5a5; letter-spacing: 1px; }
+  @keyframes pulse { 0%,100% {opacity:1; transform:scale(1)} 50% {opacity:.5; transform:scale(.85)} }
+  .onair {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    background: rgba(239,68,68,.18); color: #fecaca;
+    border: 1px solid rgba(239,68,68,.45);
+    padding: 4px 10px; border-radius: 999px;
+    display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  }
+  .onair .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; animation: pulse 1.2s infinite; }
+
+  .now-playing {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(251,191,36,.18);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .now-playing .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #e9b949; margin-bottom: 6px; }
+  .track-title { font-size: 17px; font-weight: 600; color: #fffbeb; min-height: 24px; }
+  .marquee { overflow: hidden; white-space: nowrap; }
+  .marquee span { display: inline-block; padding-left: 100%; animation: scroll 12s linear infinite; }
+  @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+  .controls { display: flex; align-items: center; gap: 14px; }
+  .btn-play {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: none; cursor: pointer; font-size: 24px;
+    color: #450a0a; font-weight: 700;
+    background: linear-gradient(135deg, #fbbf24, #fde047);
+    box-shadow: 0 8px 24px rgba(251,191,36,.4);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .15s ease;
+  }
+  .btn-play:active { transform: scale(.92); }
+  .btn-stop {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18); cursor: pointer;
+    background: rgba(255,255,255,.07); color: #fde68a; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .btn-stop:hover { background: rgba(255,255,255,.14); }
+  .volume-group { flex: 1; display: flex; align-items: center; gap: 10px; }
+  .btn-mute {
+    width: 40px; height: 40px; border-radius: 10px; border: none; cursor: pointer;
+    background: rgba(255,255,255,.07); color: #fde68a; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    flex: 1; height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg, #fbbf24 var(--fill,70%), rgba(255,255,255,.18) var(--fill,70%));
+    outline: none; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.5); cursor: pointer;
+  }
+  .vol-value { font-size: 12px; color: #e9b949; width: 34px; text-align: right; }
+
+  .news-box {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(251,191,36,.18);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .news-box .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #e9b949; margin-bottom: 10px; }
+  .news-item { font-size: 14px; line-height: 1.55; color: #fde68a; padding: 8px 0; border-top: 1px dashed rgba(251,191,36,.2); }
+  .news-item:first-of-type { border-top: none; padding-top: 0; }
+  .news-item b { color: #fffbeb; }
+  .news-time { font-size: 11px; color: #fbbf24; margin-right: 6px; font-weight: 600; }
+  .status { font-size: 12px; color: #b45309; text-align: center; }
+</style>
 </head>
 <body>
-  <h1>🌹 Rádio Rosas no ar!</h1>
-  <audio controls autoplay>
-    <source src="https://stream.caster.fm/ce066cc0-42c1-4947-99f6-a0a0b30e5385" type="audio/mpeg">
-    Seu navegador não suporta o player de áudio.
-  </audio>
+
+<div class="radio-card">
+  <div class="radio-header">
+    <div class="radio-logo-area">
+      <img class="radio-logo-img" src="logo-radio-rosas.jpg" alt="Rádio Rosas da Boa Vista">
+      <div>
+        <div class="radio-name">Rádio Rosas<br>da Boa Vista</div>
+        <div class="radio-sub">● AO VIVO</div>
+      </div>
+    </div>
+    <div class="onair"><span class="live-dot"></span> <span id="onair-text">OFFLINE</span></div>
+  </div>
+
+  <div class="now-playing">
+    <div class="label">🎵 Tocando agora</div>
+    <div class="track-title marquee"><span id="track">Gito Poeta — Soneto galope à beira mar</span></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-play" id="btnPlay" title="Play / Pause">▶</button>
+    <button class="btn-stop" id="btnStop" title="Stop">■</button>
+    <div class="volume-group">
+      <button class="btn-mute" id="btnMute" title="Mudo">🔊</button>
+      <input type="range" id="vol" min="0" max="100" value="70">
+      <span class="vol-value" id="volVal">70%</span>
+    </div>
+  </div>
+  <audio id="audio" preload="none"></audio>
+  <div class="status" id="status">Rádio Rosas da Boa Vista — via Zeno.fm</div>
+
+  <div class="news-box">
+    <div class="label">📰 Notícias do dia</div>
+    <div class="news-item"><span class="news-time">08:00</span><b>Previsão do tempo:</b> sol com nuvens parciais e máxima de 28°C hoje.</div>
+    <div class="news-item"><span class="news-time">09:15</span><b>Trânsito:</b> fluxo moderado nas principais avenidas no horário de pico.</div>
+    <div class="news-item"><span class="news-time">10:30</span><b>Cultura:</b> programação especial de shows gratuitos no fim de semana.</div>
+    <div class="news-item" style="color:#b45309;font-style:italic;">✏️ Substitua estas notícias pelas do seu dia.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var audio = document.getElementById('audio');
+  var btnPlay = document.getElementById('btnPlay');
+  var btnStop = document.getElementById('btnStop');
+  var btnMute = document.getElementById('btnMute');
+  var vol = document.getElementById('vol');
+  var volVal = document.getElementById('volVal');
+  var status = document.getElementById('status');
+  var onairText = document.getElementById('onair-text');
+
+  // Stream público Zeno.fm da Rádio Rosas da Boa Vista
+  var STREAM_URL = "https://stream.zeno.fm/wtdmmx6dd8zuv";
+
+  audio.volume = 0.7;
+  audio.src = STREAM_URL;
+
+  function setFill(){
+    vol.style.setProperty('--fill', vol.value + '%');
+    volVal.textContent = vol.value + '%';
+  }
+  setFill();
+
+  vol.addEventListener('input', function(){
+    audio.volume = vol.value / 100;
+    audio.muted = false;
+    btnMute.textContent = vol.value == 0 ? '🔇' : '🔊';
+    setFill();
+  });
+
+  btnMute.addEventListener('click', function(){
+    audio.muted = !audio.muted;
+    btnMute.textContent = audio.muted ? '🔇' : '🔊';
+  });
+
+  btnPlay.addEventListener('click', function(){
+    if(audio.paused){
+      audio.play().then(function(){
+        btnPlay.textContent = '⏸';
+        onairText.textContent = 'NO AR';
+        status.textContent = 'Transmitindo ao vivo';
+      }).catch(function(){ status.textContent = 'Erro ao conectar ao stream'; });
+    } else {
+      audio.pause();
+      btnPlay.textContent = '▶';
+      onairText.textContent = 'PAUSADO';
+      status.textContent = 'Transmissão pausada';
+    }
+  });
+
+  btnStop.addEventListener('click', function(){
+    audio.pause();
+    btnPlay.textContent = '▶';
+    onairText.textContent = 'OFFLINE';
+    status.textContent = 'Transmissão encerrada';
+  });
+
+  audio.addEventListener('ended', function(){
+    btnPlay.textContent = '▶';
+    onairText.textContent = 'OFFLINE';
+  });
+})();
+</script>
+
 </body>
 </html>
